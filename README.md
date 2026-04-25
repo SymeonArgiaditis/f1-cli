@@ -5,7 +5,7 @@ Basic CLI to fetch and print current Formula 1 driver standings.
 1. Clone the repo
 2. Create a virtual enviroment: `python -m venv venv`
 3. Activate it: `venv\Scripts\activate`
-4. Install dependencies `pip install requests`
+4. Install dependencies `pip install -r requirements.txt`
 
 ## Usage
 Run the script:
