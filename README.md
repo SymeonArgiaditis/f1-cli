@@ -9,9 +9,9 @@ Basic CLI to fetch and print current Formula 1 driver standings.
 
 ## Usage
 Run the script:
-\```
+```
 python f1.py
-\```
+```
 
 ## Data
 Shows current F1 driver standings including position, name, points, and constructor.
