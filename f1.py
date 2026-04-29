@@ -5,7 +5,7 @@ import sys
 ### API Calls ###
 
 def get_standings() -> list: 
-    response = requests.get("https://api.jolpi.ca/ergast/f1/2026/drivers/")
+    response = requests.get("https://api.jolpi.ca/ergast/f1/2026/driverstandings/")
     data = response.json()
     return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
 
@@ -14,7 +14,7 @@ def get_race(choice) -> list:
     data = response.json()
 
     races = data["MRData"]["RaceTable"]["Races"]
-    return races[choice]["raceName"] if choice < len(races) else "Race not found."
+    return races[choice-1]["raceName"] if choice <= len(races) and choice >= 1 else "Race not found."
 
 ### Data Printing ###
 
@@ -41,15 +41,10 @@ def main():
 
     args = parser.parse_args()
 
-    actions = {
-        "standings": run_standings,
-        "race": run_race
-    }
-
-    #Check if the attribute is set
-    for key, function in actions.items():
-        if getattr(args, key):
-            function(args)
+    if args.standings:
+        run_standings(args)
+    if args.race is not None:
+        run_race(args)
 
 if __name__ == "__main__":
     main()
