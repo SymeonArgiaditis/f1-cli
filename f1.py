@@ -26,19 +26,22 @@ def print_standings(drivers) -> None:
 def print_race(race) -> None:
     print(race)
 
-#Argument Parser
-parser = argparse.ArgumentParser(description="print F1 standings")
+def main():
+    parser = argparse.ArgumentParser(description="F1 Statistics Tool")
 
-parser.add_argument("-s", "--standings", action="store_true",
-                    help="display 2025 driver standings")
-#choices=range(0,24)
-parser.add_argument("-r", "--race", type=int, default=0,
-                    help="display race name corresponding to number")
+    parser.add_argument("-s", "--standings", action="store_true",
+                        help="display 2025 driver standings")
+    #choices=range(0,24)
+    parser.add_argument("-r", "--race", type=int, default=0,
+                        help="display race name corresponding to index number")
 
-args = parser.parse_args()
-choice = args.race
+    args = parser.parse_args()
+    choice = args.race
 
-if args.standings:
-    print_standings(get_standings())
-if args.race:
-    print_race(get_race(choice))
+    if args.standings:
+        print_standings(get_standings())
+    if args.race:
+        print_race(get_race(choice))
+
+if __name__ == "__main__":
+    main()
