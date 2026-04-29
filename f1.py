@@ -7,25 +7,24 @@ import sys
 def get_standings() -> list: 
     response = requests.get("https://api.jolpi.ca/ergast/f1/2025/driverStandings/")
     data = response.json()
-    drivers = data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
-
-    return drivers
+    return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
 
 def get_race(choice) -> list:
     response = requests.get("https://api.jolpi.ca/ergast/f1/2026/races/")
     data = response.json()
 
-    race = data["MRData"]["RaceTable"]["Races"][choice]["raceName"]
-    return race
+    races = data["MRData"]["RaceTable"]["Races"]
+    return races[choice]["raceName"] if choice < len(races) else "Race not found."
 
-### Data Printing###
+### Data Printing ###
 
-def print_standings(drivers) -> None:
+def run_standings(args) -> None:
+    drivers = get_standings()
     for driver in drivers:
         print(f"{driver["position"]}. {driver["Driver"]["givenName"]} {driver["Driver"]["familyName"]} - {driver["points"]} pts ({driver['Constructors'][0]['name']})")
 
-def print_race(race) -> None:
-    print(race)
+def run_race(args) -> None:
+    print(get_race(args.race))
 
 def main():
     parser = argparse.ArgumentParser(description="F1 Statistics Tool")
@@ -42,8 +41,8 @@ def main():
     args = parser.parse_args()
 
     actions = {
-        "standings": print_standings,
-        "race": print_race
+        "standings": run_standings,
+        "race": run_race
     }
 
     for key, function in actions.items():
