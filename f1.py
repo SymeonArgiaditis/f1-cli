@@ -2,7 +2,7 @@ import requests
 import argparse
 import sys
 
-###API Calls###
+### API Calls ###
 
 def get_standings() -> list: 
     response = requests.get("https://api.jolpi.ca/ergast/f1/2025/driverStandings/")
