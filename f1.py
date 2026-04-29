@@ -5,7 +5,7 @@ import sys
 ### API Calls ###
 
 def get_standings() -> list: 
-    response = requests.get("https://api.jolpi.ca/ergast/f1/2025/driverStandings/")
+    response = requests.get("https://api.jolpi.ca/ergast/f1/2026/drivers/")
     data = response.json()
     return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
 
@@ -31,7 +31,7 @@ def main():
 
     parser.add_argument("-s", "--standings", action="store_true",
                         help="display 2025 driver standings")
-    parser.add_argument("-r", "--race", type=int, default=0,
+    parser.add_argument("-r", "--race", type=int, default=None,
                         help="display race name corresponding to index number")
 
     #If user provides no arguments, print help and exit
