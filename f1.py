@@ -34,6 +34,7 @@ def main():
     parser.add_argument("-r", "--race", type=int, default=0,
                         help="display race name corresponding to index number")
 
+    #If user provides no arguments, print help and exit
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -45,6 +46,7 @@ def main():
         "race": run_race
     }
 
+    #Check if the attribute is set
     for key, function in actions.items():
         if getattr(args, key):
             function(args)
