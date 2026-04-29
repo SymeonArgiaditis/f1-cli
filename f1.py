@@ -1,5 +1,6 @@
 import requests
 import argparse
+import sys
 
 ###API Calls###
 
@@ -31,17 +32,23 @@ def main():
 
     parser.add_argument("-s", "--standings", action="store_true",
                         help="display 2025 driver standings")
-    #choices=range(0,24)
     parser.add_argument("-r", "--race", type=int, default=0,
                         help="display race name corresponding to index number")
 
-    args = parser.parse_args()
-    choice = args.race
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
 
-    if args.standings:
-        print_standings(get_standings())
-    if args.race:
-        print_race(get_race(choice))
+    args = parser.parse_args()
+
+    actions = {
+        "standings": print_standings,
+        "race": print_race
+    }
+
+    for key, function in actions.items():
+        if getattr(args, key):
+            function(args)
 
 if __name__ == "__main__":
     main()
