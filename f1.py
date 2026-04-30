@@ -4,19 +4,31 @@ import sys
 
 ### API Calls ###
 
-def get_standings() -> list: 
-    response = requests.get("https://api.jolpi.ca/ergast/f1/2026/driverstandings/")
-    data = response.json()
-    return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
+def safe_request(url, timeout=(10,20)):
+    try:
+        response = requests.get(url, timeout=timeout)
+        return response
+    except requests.exceptions.ConnectionError:
+        raise ConnectionError("Error: could not connect to the F1 API. Check your internet connection.")
+
+def get_standings() -> list:
+    try:
+        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/driverstandings/").json()
+        return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
+    except KeyError:
+        raise KeyError("Error: unexpected response from the F1 API.")
 
 def get_race(choice) -> str:
-    response = requests.get("https://api.jolpi.ca/ergast/f1/2026/races/")
-    data = response.json()
-    races = data["MRData"]["RaceTable"]["Races"]
+    try:
+        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/races/").json()
+        races = data["MRData"]["RaceTable"]["Races"]
+
+        if choice <= len(races) and choice >= 1:
+            return races[choice-1]["raceName"]
+        return "Race not found."
     
-    if choice <= len(races) and choice >= 1:
-        return races[choice-1]["raceName"]
-    return "Race not found."
+    except KeyError:
+        raise KeyError("Error: unexpected response from the F1 API.")
 
 ### Data Printing ###
 
@@ -43,10 +55,17 @@ def main():
 
     args = parser.parse_args()
 
-    if args.standings:
-        run_standings(args)
-    if args.race is not None:
-        run_race(args)
+    try:
+        if args.standings:
+            run_standings(args)
+        if args.race is not None:
+            run_race(args)
+    except ConnectionError as e:
+        print(e)
+        sys.exit(1)
+    except KeyError as e:
+        print (e)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
