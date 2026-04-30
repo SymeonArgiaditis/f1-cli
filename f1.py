@@ -30,7 +30,7 @@ def main():
     parser = argparse.ArgumentParser(description="F1 Statistics Tool")
 
     parser.add_argument("-s", "--standings", action="store_true",
-                        help="display 2025 driver standings")
+                        help="display 2026 driver standings")
     parser.add_argument("-r", "--race", type=int, default=None,
                         help="display race name corresponding to index number")
 
