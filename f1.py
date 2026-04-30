@@ -9,12 +9,14 @@ def get_standings() -> list:
     data = response.json()
     return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
 
-def get_race(choice) -> list:
+def get_race(choice) -> str:
     response = requests.get("https://api.jolpi.ca/ergast/f1/2026/races/")
     data = response.json()
-
     races = data["MRData"]["RaceTable"]["Races"]
-    return races[choice-1]["raceName"] if choice <= len(races) and choice >= 1 else "Race not found."
+    
+    if choice <= len(races) and choice >= 1:
+        return races[choice-1]["raceName"]
+    return "Race not found."
 
 ### Data Printing ###
 
