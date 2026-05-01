@@ -1,44 +1,8 @@
-import requests
 import argparse
 import sys
 
-### API Calls ###
-
-def safe_request(url, timeout=(10,20)):
-    try:
-        response = requests.get(url, timeout=timeout)
-        return response
-    except requests.exceptions.ConnectionError:
-        raise ConnectionError("Error: could not connect to the F1 API. Check your internet connection.")
-
-def get_standings() -> list:
-    try:
-        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/driverstandings/").json()
-        return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
-    except KeyError:
-        raise KeyError("Error: unexpected response from the F1 API.")
-
-def get_race(choice) -> str:
-    try:
-        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/races/").json()
-        races = data["MRData"]["RaceTable"]["Races"]
-
-        if choice <= len(races) and choice >= 1:
-            return races[choice-1]["raceName"]
-        return "Race not found."
-    
-    except KeyError:
-        raise KeyError("Error: unexpected response from the F1 API.")
-
-### Data Printing ###
-
-def run_standings(args) -> None:
-    drivers = get_standings()
-    for driver in drivers:
-        print(f"{driver['position']}. {driver['Driver']['givenName']} {driver['Driver']['familyName']} - {driver['points']} pts ({driver['Constructors'][0]['name']})")
-
-def run_race(args) -> None:
-    print(get_race(args.race))
+from api import get_standings, get_race
+from display import show_standings, show_race
 
 def main():
     parser = argparse.ArgumentParser(description="F1 Statistics Tool")
@@ -57,9 +21,11 @@ def main():
 
     try:
         if args.standings:
-            run_standings(args)
+            drivers = get_standings()
+            show_standings(drivers)
         if args.race is not None:
-            run_race(args)
+            race = get_race(args.race)
+            show_race(race)
     except ConnectionError as e:
         print(e)
         sys.exit(1)
