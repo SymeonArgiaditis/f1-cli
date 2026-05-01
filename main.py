@@ -2,14 +2,7 @@ import argparse
 import sys
 
 from api import get_standings, get_race
-
-def run_standings(args) -> None:
-    drivers = get_standings()
-    for driver in drivers:
-        print(f"{driver['position']}. {driver['Driver']['givenName']} {driver['Driver']['familyName']} - {driver['points']} pts ({driver['Constructors'][0]['name']})")
-
-def run_race(args) -> None:
-    print(get_race(args.race))
+from display import show_standings, show_race
 
 def main():
     parser = argparse.ArgumentParser(description="F1 Statistics Tool")
@@ -28,9 +21,11 @@ def main():
 
     try:
         if args.standings:
-            run_standings(args)
+            drivers = get_standings()
+            show_standings(drivers)
         if args.race is not None:
-            run_race(args)
+            race = get_race(args.race)
+            show_race(race)
     except ConnectionError as e:
         print(e)
         sys.exit(1)
