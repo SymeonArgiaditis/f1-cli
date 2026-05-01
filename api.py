@@ -14,13 +14,14 @@ def get_standings() -> list:
     except KeyError:
         raise KeyError("Error: unexpected response from the F1 API.")
 
-def get_race(choice) -> str:
+def get_race(choice):
     try:
         data = safe_request("https://api.jolpi.ca/ergast/f1/2026/races/").json()
         races = data["MRData"]["RaceTable"]["Races"]
 
         if choice <= len(races) and choice >= 1:
-            return races[choice-1]["raceName"]
+            #return race OBJ as JSON
+            return races[choice-1]
         return "Race not found."
     
     except KeyError:
