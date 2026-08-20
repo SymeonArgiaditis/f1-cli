@@ -1,22 +1,23 @@
 import requests
+from typing import Any
 
-def safe_request(url, timeout=(10,20)):
+def safe_request(url: str, timeout: float | tuple[float, float]=(10,20)) -> requests.Response:
     try:
         response = requests.get(url, timeout=timeout)
         return response
     except requests.exceptions.ConnectionError:
         raise ConnectionError("Error: could not connect to the F1 API. Check your internet connection.")
 
-def get_standings() -> list:
+def get_standings() -> list[dict[str, Any]]:
     try:
-        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/driverstandings/").json()
+        data: dict[str, Any] = safe_request("https://api.jolpi.ca/ergast/f1/2026/driverstandings/").json()
         return data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
     except KeyError:
         raise KeyError("Error: unexpected response from the F1 API.")
 
-def get_race(choice):
+def get_race(choice: int) -> dict[str, Any]:
     try:
-        data = safe_request("https://api.jolpi.ca/ergast/f1/2026/races/").json()
+        data: dict[str, Any] = safe_request("https://api.jolpi.ca/ergast/f1/2026/races/").json()
         races = data["MRData"]["RaceTable"]["Races"]
 
         if choice <= len(races) and choice >= 1:
