@@ -4,7 +4,7 @@ import sys
 from api import get_standings, get_race
 from display import show_standings, show_race_info
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="F1 Statistics Tool")
 
     parser.add_argument("-s", "--standings", action="store_true",
