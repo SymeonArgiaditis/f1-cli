@@ -14,6 +14,7 @@ def safe_request(
             "Check your internet connection."
         )
 
+
 def get_standings() -> list[dict[str, Any]]:
     try:
         data: dict[str, Any] = safe_request(
@@ -26,6 +27,7 @@ def get_standings() -> list[dict[str, Any]]:
     
     except KeyError:
         raise KeyError("Error: unexpected response from the F1 API.")
+
 
 def get_race(choice: int) -> dict[str, Any]:
     try:
